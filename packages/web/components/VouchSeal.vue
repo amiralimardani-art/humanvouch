@@ -12,6 +12,7 @@ const props = withDefaults(
 
 const CX = 200;
 const CY = 200;
+const hashLines = computed(() => props.hash.match(/.{1,20}/g) || [""]);
 
 // A guilloché band: many concentric wavy rings, each rotated a touch in phase,
 // so the crests interlace into a woven rope between two radii.
@@ -95,8 +96,12 @@ const ringText = "HUMAN-VOUCHED · ANONYMOUS · UNIQUE · STELLAR · ZK · ";
     <circle :cx="CX" :cy="CY" r="86" fill="url(#seal-core)" stroke="#2b4a7e" stroke-width="0.75" />
     <circle :cx="CX" :cy="CY" r="79" fill="none" stroke="#B08D57" stroke-width="0.5" opacity="0.65" />
 
-    <text :x="CX" :y="CY - 22" text-anchor="middle" fill="#B08D57" font-family="IBM Plex Mono, monospace" font-size="20">✓</text>
-    <text :x="CX" :y="CY + 8" text-anchor="middle" fill="#ECE6D8" font-family="IBM Plex Mono, monospace" font-size="15" letter-spacing="1">{{ hash }}</text>
-    <text :x="CX" :y="CY + 30" text-anchor="middle" fill="#AEA994" font-family="IBM Plex Mono, monospace" font-size="8.5" letter-spacing="3.5">{{ label.toUpperCase() }}</text>
+    <text :x="CX" :y="hash.length > 20 ? CY - 28 : CY - 22" text-anchor="middle" fill="#B08D57" font-family="IBM Plex Mono, monospace" font-size="20">✓</text>
+    <text text-anchor="middle" fill="#ECE6D8" font-family="IBM Plex Mono, monospace"
+          :font-size="hash.length > 20 ? 10 : 15" :letter-spacing="hash.length > 20 ? 0 : 1">
+      <tspan v-for="(line, i) in hashLines" :key="i" :x="CX"
+             :y="hash.length > 20 ? CY - 10 + i * 12 : CY + 8">{{ line }}</tspan>
+    </text>
+    <text :x="CX" :y="hash.length > 20 ? CY + 44 : CY + 30" text-anchor="middle" fill="#AEA994" font-family="IBM Plex Mono, monospace" font-size="8.5" letter-spacing="3.5">{{ label.toUpperCase() }}</text>
   </svg>
 </template>
