@@ -2,7 +2,19 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-> **Plan series:** This is plan 01 of 5 (see `docs/superpowers/specs/2026-06-27-humanvouch-design.md` §8). Subsequent plans: 02 Soroban contracts · 03 enrollment + API · 04 Nuxt UI · 05 stretch (X adapter + NFT). This plan is self-contained and ends with a working, locally-verifiable Groth16 proof of anonymous unique-human content attestation.
+> **Plan series:** This is plan 01 of 5. The successor plans were never written as documents; none of them
+> exists in `docs/superpowers/plans/`:
+>
+> - 02 Soroban contracts (not present)
+> - 03 enrollment + API (not present)
+> - 04 Nuxt UI (not present)
+> - 05 stretch: X adapter + NFT (not present)
+>
+> **Superseded:** plans 02–05 were replaced by `docs/superpowers/specs/2026-06-29-bls12381-onchain-addendum.md`,
+> which moved the on-chain build to BLS12-381 and the API to Nuxt/Nitro server routes. The project scope
+> (MUST/SHOULD/CUT) is in §8 of `docs/superpowers/specs/2026-06-27-humanvouch-design.md`; it is not a plan index.
+>
+> This plan is self-contained and ends with a working, locally-verifiable Groth16 proof of anonymous unique-human content attestation.
 
 **Goal:** Build and locally verify a Circom/Groth16 circuit proving "a committed identity is a member of a Poseidon Merkle registry, and a content-bound nullifier is correctly derived" — without revealing the identity.
 
