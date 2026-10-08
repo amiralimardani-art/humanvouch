@@ -1,0 +1,44 @@
+name: Bug report
+description: Something in the app, circuits or contracts does not behave as documented.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - web (Nuxt app / server routes)
+        - circuits / zk
+        - contracts (Soroban)
+        - docs
+        - CI
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands, inputs or URL.
+      placeholder: |
+        1. cd packages/web && yarn dev
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Include error output or the failing transaction hash.
+    validations:
+      required: true
+  - type: input
+    id: contract
+    attributes:
+      label: Contract ID (if on-chain)
+      placeholder: C...
