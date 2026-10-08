@@ -56,8 +56,8 @@ exactly the distinction most hackathon entries in this space will get wrong.
 
 ```
 [Enrollment off-chain]        [Circom circuit]          [Soroban]                 [App: Nuxt + Express]
- human → commitment      →     prove membership     →    RegistryContract    ←     author: hash + proof + submit
- issuer → Merkle tree          + content nullifier        AttestContract            reader: paste URL → fetch
+ human → commitment      →     prove membership     →    AttestContract      ←     author: hash + proof + submit
+ issuer → Merkle tree          + content nullifier        (root registry +          reader: paste URL → fetch
  root  → on-chain (Groth16)                              (verify+replay+record)            → normalize → hash → query
 ```
 
@@ -65,8 +65,8 @@ Four components + a consumption layer.
 
 ### 4.1 Personhood Registry (mock issuer + on-chain root)
 - Off-chain: each human generates `identitySecret`; `commitment = Poseidon(identitySecret)`.
-- Issuer (us, for demo) inserts commitments into a Poseidon Merkle tree; publishes `root` to a Soroban
-  `RegistryContract`. Pre-enroll N demo humans before recording the video.
+- Issuer (us, for demo) inserts commitments into a Poseidon Merkle tree; publishes `root` to the Soroban
+  `AttestContract` root registry via `set_root`. Pre-enroll N demo humans before recording the video.
 - README states production replaces this with World ID / Self protocol.
 
 ### 4.2 Attestation Circuit (Circom) — the core

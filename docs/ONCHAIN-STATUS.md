@@ -31,7 +31,7 @@ Last updated: 2026-06-29
   `poseidon255.circom` + `poseidon255_constants.circom` (jmagan, BLS12-381 Poseidon).
 - `packages/zk/attest-spike.js` — off-chain registry + Merkle + witness builder (wasm-oracle).
 - `packages/contracts/groth16-verifier/` — the working BLS12-381 Groth16 verifier (from
-  CircomStellar, MIT). To be extended into RegistryContract + AttestContract.
+  CircomStellar, MIT). Extended into AttestContract, which also holds the root registry.
 - `packages/contracts/circom-to-soroban-hex/` — encodes snarkjs vk/proof/public → contract hex.
 
 Build artifacts (`build/`, `target/`, `*.zkey`, `*.ptau`) are gitignored and regenerated.
