@@ -1,7 +1,9 @@
 // Verify a Cloudflare Turnstile token server-side (real anti-bot human check).
-// Uses Turnstile's public TEST secret (always passes) so the demo works with no
-// signup; swap CF_TURNSTILE_SECRET for a real key in production.
-const TURNSTILE_SECRET = "1x0000000000000000000000000000000AA";
+// Reads CF_TURNSTILE_SECRET from the environment (see .env.example). Without it,
+// falls back to Turnstile's public TEST secret (always passes) so the demo works
+// with no signup; set a real key in production.
+const TURNSTILE_TEST_SECRET = "1x0000000000000000000000000000000AA";
+const TURNSTILE_SECRET = process.env.CF_TURNSTILE_SECRET || TURNSTILE_TEST_SECRET;
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event).catch(() => ({}));
