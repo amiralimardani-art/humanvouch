@@ -1,0 +1,51 @@
+name: fork-tests
+on:
+  push:
+    branches: ['test/**']
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with: {node-version: '24'}
+    - run: corepack enable
+    - run: yarn install
+    - run: yarn workspace @humanvouch/web run postinstall
+    - run: yarn workspace @humanvouch/web test
+    - run: yarn workspace @humanvouch/web run typecheck
+  circuits:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with: {node-version: '24'}
+    - run: corepack enable
+    - run: yarn install
+    - run: |
+        mkdir -p "$RUNNER_TEMP/c"; curl -sSfL https://github.com/iden3/circom/releases/download/v2.2.3/circom-linux-amd64 -o "$RUNNER_TEMP/c/circom"
+        chmod +x "$RUNNER_TEMP/c/circom"; echo "$RUNNER_TEMP/c" >> "$GITHUB_PATH"
+    - run: yarn workspace @humanvouch/circuits test
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@master
+      with: {toolchain: 1.91.0, targets: wasm32v1-none}
+    - uses: Swatinem/rust-cache@v2
+      with: {workspaces: "packages/contracts/attest\npackages/contracts/groth16-verifier"}
+    - run: cargo test --manifest-path packages/contracts/attest/Cargo.toml
+    - run: cargo test --manifest-path packages/contracts/groth16-verifier/Cargo.toml
+    - run: cargo build --manifest-path packages/contracts/attest/Cargo.toml --target wasm32v1-none --release
+  lockcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with: {node-version: '24'}
+    - run: corepack enable
+    - run: yarn install --immutable --mode=skip-build
