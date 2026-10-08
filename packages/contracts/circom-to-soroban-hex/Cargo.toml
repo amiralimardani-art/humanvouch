@@ -3,6 +3,7 @@ name = "circom-to-soroban-hex"
 version = "0.1.0"
 edition = "2021"
 publish = false
+rust-version = "1.89.0"
 
 [dependencies]
 ark-bls12-381 = "0.4.0"
