@@ -1,3 +1,5 @@
+import { MAX_CONTENT_BYTES, contentTooLarge } from "../../../lib/shared/limits";
+
 // HumanVouch — agent-consumable attestation endpoint (x402).
 //
 // An AI agent asks: "does a real, unique human stand behind this content?"
@@ -26,7 +28,12 @@ export default defineEventHandler(async (event) => {
       return { code: "HASH_OUT_OF_RANGE", error: "hash must be less than the BLS12-381 scalar field modulus" };
     }
   } else {
-    contentField = contentToField(String(q.content ?? ""));
+    const content = String(q.content ?? "");
+    if (contentTooLarge(content)) {
+      setResponseStatus(event, 413);
+      return { code: "CONTENT_TOO_LARGE", error: `content must be at most ${MAX_CONTENT_BYTES} bytes (UTF-8)` };
+    }
+    contentField = contentToField(content);
   }
 
   const resource = `/api/v1/attestation?hash=${contentField.toString()}`;

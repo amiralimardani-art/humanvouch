@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MAX_CONTENT_BYTES, contentTooLarge } from "~/lib/shared/limits";
 const cfg = useRuntimeConfig().public;
 const route = useRoute();
 
@@ -183,6 +184,7 @@ async function doVouch() {
     const member = registry.value.members[memberId.value];
 
     vStatus.value = "Hashing content…";
+    if (contentTooLarge(content.value)) throw new Error(`content is longer than ${MAX_CONTENT_BYTES} bytes`);
     const ch = await zk.contentHashField(content.value);
 
     vStatus.value = "Generating zero-knowledge proof in your browser…";
