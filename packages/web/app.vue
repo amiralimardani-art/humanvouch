@@ -311,13 +311,13 @@ async function runAgentQuery() {
             <p v-else class="mt-2 text-xs text-brass-light">✓ Human verified · identity issued <span class="text-paper-faint">(real anti-bot via Turnstile; World ID adds uniqueness)</span></p>
           </div>
 
-          <label class="mt-4 block font-mono text-xs text-paper-faint">YOUR VERIFIED IDENTITY (demo registry)</label>
-          <select v-model="memberId" class="mt-1.5 w-full rounded-sm border border-ink-600 bg-ink-800 px-3 py-2 text-sm text-paper">
+          <label for="member-id" class="mt-4 block font-mono text-xs text-paper-faint">YOUR VERIFIED IDENTITY (demo registry)</label>
+          <select id="member-id" v-model="memberId" class="mt-1.5 w-full rounded-sm border border-ink-600 bg-ink-800 px-3 py-2 text-sm text-paper">
             <option v-for="m in registry?.members || []" :key="m.id" :value="m.id">{{ m.label }}</option>
           </select>
 
-          <label class="mt-4 block font-mono text-xs text-paper-faint">CONTENT (a full article)</label>
-          <textarea v-model="content" rows="5"
+          <label for="vouch-content" class="mt-4 block font-mono text-xs text-paper-faint">CONTENT (a full article)</label>
+          <textarea id="vouch-content" v-model="content" rows="5"
             class="mt-1.5 w-full resize-none rounded-sm border border-ink-600 bg-ink-800 px-3 py-2 text-sm leading-relaxed text-paper" />
 
           <button :disabled="vBusy || !humanVerified"
@@ -350,8 +350,8 @@ async function runAgentQuery() {
           <p class="eyebrow text-paper-dim">Verify a post</p>
           <p class="mt-3 text-sm text-paper-dim">Anyone can check how many unique verified humans stand behind a piece of content.</p>
 
-          <label class="mt-5 block font-mono text-xs text-paper-faint">PASTE CONTENT (blank = use the one on the left)</label>
-          <textarea v-model="vcontent" rows="3" placeholder="Paste the article / post text…"
+          <label for="verify-content" class="mt-5 block font-mono text-xs text-paper-faint">PASTE CONTENT (blank = use the one on the left)</label>
+          <textarea id="verify-content" v-model="vcontent" rows="3" placeholder="Paste the article / post text…"
             class="mt-1.5 w-full resize-none rounded-sm border border-ink-600 bg-ink-800 px-3 py-2 text-sm text-paper placeholder:text-paper-faint" />
 
           <button :disabled="verBusy"
