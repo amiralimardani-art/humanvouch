@@ -15,6 +15,13 @@ const verifyingHuman = ref(false);
 const humanErr = ref("");
 const turnstileEl = ref<HTMLElement | null>(null);
 let turnstileRendered = false;
+let turnstileTimer: ReturnType<typeof setTimeout> | null = null;
+let turnstileAttempts = 0;
+const TURNSTILE_MAX_ATTEMPTS = 50; // 15 seconds at 300 ms intervals
+onUnmounted(() => {
+  if (turnstileTimer !== null) clearTimeout(turnstileTimer);
+  turnstileTimer = null;
+});
 useHead({
   script: [
     { src: "https://challenges.cloudflare.com/turnstile/v0/api.js", async: true, defer: true },
@@ -57,6 +64,24 @@ function renderTurnstile() {
       });
     }
   );
+  if (!w.turnstile || !turnstileEl.value) {
+    if (turnstileAttempts >= TURNSTILE_MAX_ATTEMPTS) {
+      humanErr.value = "Human verification could not load. Reload this page to try again.";
+      return;
+    }
+    turnstileAttempts++;
+    turnstileTimer = setTimeout(() => {
+      turnstileTimer = null;
+      renderTurnstile();
+    }, 300);
+    return;
+  }
+  turnstileRendered = true;
+  w.turnstile.render(turnstileEl.value, {
+    sitekey: TURNSTILE_SITEKEY,
+    theme: "dark",
+    callback: onHumanToken,
+  });
 }
 
 onUnmounted(() => {
