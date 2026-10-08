@@ -86,6 +86,29 @@ circom attestation255.circom --r1cs --wasm --prime bls12381 -o build
 # trusted setup + proof: see docs/ONCHAIN-STATUS.md
 ```
 
+## Deploy
+
+The live demo is deployed to Vercel with `packages/web/scripts/deploy.sh`, the only reproducible
+deployment path:
+
+```bash
+cd packages/web && ./scripts/deploy.sh
+```
+
+What the script does:
+
+1. Builds with the Vercel preset (`VERCEL=1 yarn build`), producing `.vercel/output/`.
+2. Copies the **complete** `@stellar/stellar-sdk` package from the root `node_modules` into every
+   serverless function under `.vercel/output/functions/*.func/node_modules/@stellar/stellar-sdk`.
+3. Uploads the prebuilt output to production with `npx --yes vercel deploy --prebuilt --prod --yes`.
+
+**Do not remove step 2.** `stellar-sdk` 16's ESM build ships nested vendored dependencies that Vercel's
+file tracer misses. Without the copy, the server routes (for example the x402 endpoint
+`/api/v1/attestation`) return a 500 on a missing `js-xdr` file.
+
+Requirements: the Vercel CLI must be authenticated (`npx vercel login`, or a `VERCEL_TOKEN` in the
+environment) and the directory linked to the Vercel project (`npx vercel link`).
+
 ## Honest caveats (also stated in the demo)
 
 - **Not AI detection.** Attribution to an accountable unique human, not a claim about who typed the bytes.
