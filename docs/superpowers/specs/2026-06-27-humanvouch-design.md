@@ -181,14 +181,14 @@ normalization module:
 
 | Layer | Technology | Source |
 |---|---|---|
-| Monorepo / tooling | Turborepo + Yarn 4 workspaces + Vitest + dotenvx | Template |
-| Frontend (verifier + author UI) | Nuxt 3 + Tailwind + radix-vue + Pinia + lucide + marked | Template (`packages/dashboard`) |
-| Backend API | Express 5 (ESM) + pino + helmet + cors + rate-limit | Template (`packages/api`) |
-| Index / content store | Prisma 7 + SQLite (demo) → IPFS (prod) | Template (Prisma); SQLite = YAGNI adjustment |
+| Monorepo / tooling | Turborepo + Yarn 4 workspaces + Vitest. **Not used:** dotenvx | Template |
+| Frontend (verifier + author UI) | **Shipped:** Nuxt 3 + Tailwind in `packages/web`. **Not used:** radix-vue, Pinia, lucide, marked | Template (`packages/dashboard`) |
+| Backend API | **Shipped:** Nuxt/Nitro server routes in `packages/web/server/api/` (`fund.get.ts`, `verify-human.post.ts`, `v1/attestation.get.ts`). **Not built:** Express 5 + pino + helmet + cors + rate-limit (`packages/api`) | Replaced by Nitro routes per the BLS12-381 addendum |
+| Index / content store | **Not built:** no Prisma schema, no SQLite, no IPFS. Shared content is kept only in the author's browser `localStorage` | Planned: Prisma + SQLite (demo) → IPFS (prod) |
 | ZK circuit | Circom 2 + circomlib (Poseidon, Merkle) + snarkjs (setup + proof) | NEW (`packages/circuits`) |
 | Contracts | Soroban (Rust) + soroban-cli, based on `soroban-examples/groth16_verifier` | NEW (`packages/contracts`) |
-| Stellar tx / query | @stellar/stellar-sdk (in API) | NEW |
-| Consumption adapters | undici + @mozilla/readability + jsdom (Medium); oembed/syndication (X) | NEW (in API) |
+| Stellar tx / query | @stellar/stellar-sdk (browser `packages/web/lib/stellar.js` + server `packages/web/server/utils/chain.ts`) | NEW |
+| Consumption adapters | **Not built:** undici + @mozilla/readability + jsdom (Medium); oembed/syndication (X) | NEW (planned) |
 | Mock issuer + enroll | Node script: commitments + Poseidon Merkle tree + publish root | NEW (`scripts/`) |
 
 `ScarlettPlattform/scarlett-hub` is used **read-only as a template** (structure + conventions copied to
