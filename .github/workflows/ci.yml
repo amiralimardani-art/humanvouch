@@ -16,10 +16,10 @@ jobs:
     timeout-minutes: 20
     steps:
     - uses: actions/checkout@v7
-    - name: Install Rust toolchain (1.91.0)
+    - name: Install Rust toolchain (1.92.0)
       uses: dtolnay/rust-toolchain@master
       with:
-        toolchain: 1.91.0
+        toolchain: 1.92.0
         targets: wasm32v1-none
     - uses: Swatinem/rust-cache@v2
       with:
