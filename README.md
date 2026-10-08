@@ -81,7 +81,7 @@ docs/          design spec, BLS12-381 migration addendum, on-chain status
 cd packages/web && yarn install && yarn dev      # http://127.0.0.1:58273
 
 # rebuild the ZK circuit + proof (needs the circom 2 compiler on PATH)
-cd packages/zk/circuits
+cd packages/zk/circuits && mkdir -p build
 circom attestation255.circom --r1cs --wasm --prime bls12381 -o build
 # trusted setup + proof: see docs/ONCHAIN-STATUS.md
 ```
