@@ -1,0 +1,19 @@
+# gitleaks configuration: default rules plus a Stellar secret-seed rule.
+# Allowlist only the documented, public Cloudflare Turnstile TEST keys (see SECURITY.md).
+title = "humanvouch gitleaks config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "stellar-secret-seed"
+description = "Stellar secret seed (S + 55 base32 chars)"
+regex = '''\bS[A-Z2-7]{55}\b'''
+keywords = ["S"]
+
+[allowlist]
+description = "Public Cloudflare Turnstile test keys (always pass / dummy), documented in SECURITY.md"
+regexes = [
+  '''1x0000000000000000000000000000000AA''', # Turnstile test secret: always passes
+  '''1x00000000000000000000AA''',            # Turnstile test sitekey: always passes
+]
