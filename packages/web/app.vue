@@ -246,6 +246,7 @@ async function runAgentQuery() {
           {{ walletBusy ? (walletStatus || "Connecting…") : wallet ? short(wallet) + " · testnet" : "Create testnet wallet" }}
         </button>
       </header>
+      <p v-if="walletErr" role="alert" class="px-6 pt-3 font-mono text-xs text-oxblood sm:px-10">⚠ {{ walletErr }}</p>
 
       <!-- shared verification (opened from a /?v=… link pasted on X / Medium) -->
       <section v-if="shareView" class="border-b border-ink-600 bg-brass/5 px-6 py-7 sm:px-10">
@@ -306,7 +307,7 @@ async function runAgentQuery() {
               <p class="text-xs text-paper-dim">Pass a real human check before you get an identity.</p>
               <div ref="turnstileEl" class="mt-2 min-h-[66px]" />
               <p v-if="verifyingHuman" class="mt-2 font-mono text-xs text-prussian-light">Verifying with Cloudflare…</p>
-              <p v-if="humanErr" class="mt-2 font-mono text-xs text-oxblood">⚠ {{ humanErr }}</p>
+              <p v-if="humanErr" role="alert" class="mt-2 font-mono text-xs text-oxblood">⚠ {{ humanErr }}</p>
             </div>
             <p v-else class="mt-2 text-xs text-brass-light">✓ Human verified · identity issued <span class="text-paper-faint">(real anti-bot via Turnstile; World ID adds uniqueness)</span></p>
           </div>
@@ -327,7 +328,7 @@ async function runAgentQuery() {
           </button>
 
           <p v-if="vStatus" class="mt-3 font-mono text-xs text-prussian-light">{{ vStatus }}</p>
-          <p v-if="vErr" class="mt-3 font-mono text-xs text-oxblood">⚠ {{ vErr }}</p>
+          <p v-if="vErr" role="alert" class="mt-3 font-mono text-xs text-oxblood">⚠ {{ vErr }}</p>
           <div v-if="vResult" class="mt-4 rounded-sm border border-brass/30 bg-brass/5 p-4 text-sm">
             <p class="text-brass-light">✅ Vouched on-chain · <span class="text-paper">{{ vResult.count }}</span> unique human(s) for this content</p>
             <a :href="`https://stellar.expert/explorer/testnet/tx/${vResult.hash}`" target="_blank"
@@ -360,7 +361,7 @@ async function runAgentQuery() {
             {{ verBusy ? "Checking…" : "Check vouches on Stellar" }}
           </button>
 
-          <p v-if="verErr" class="mt-3 font-mono text-xs text-oxblood">⚠ {{ verErr }}</p>
+          <p v-if="verErr" role="alert" class="mt-3 font-mono text-xs text-oxblood">⚠ {{ verErr }}</p>
           <div v-if="verCount !== null" class="mt-4 rounded-sm border border-ink-600 p-4">
             <p class="font-display text-3xl text-paper">{{ verCount }}</p>
             <p class="mt-1 text-sm text-paper-dim">unique verified human(s) vouch for this exact content · anonymous · on Stellar</p>
@@ -399,7 +400,7 @@ async function runAgentQuery() {
         <pre class="mt-5 overflow-x-auto rounded-sm border border-ink-600 bg-ink-800 p-4 font-mono text-xs text-paper-dim"><span class="text-paper-faint"># an agent asks if a human backs this article</span>
 curl <span class="text-prussian-light">/api/v1/attestation?content=…</span></pre>
 
-        <div v-if="agentErr" class="mt-3 font-mono text-xs text-oxblood">⚠ {{ agentErr }}</div>
+        <div v-if="agentErr" role="alert" class="mt-3 font-mono text-xs text-oxblood">⚠ {{ agentErr }}</div>
 
         <div v-if="agent402" class="mt-4 grid gap-3 lg:grid-cols-2">
           <div>
