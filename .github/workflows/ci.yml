@@ -76,5 +76,22 @@ jobs:
       run: yarn workspace @humanvouch/web run postinstall
     - name: Typecheck Nuxt app
       run: yarn workspace @humanvouch/web run typecheck
+  size-gate:
+    name: size-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Block oversized files
+      env:
+        BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+      run: |
+        if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+          BASE=$(git hash-object -t tree /dev/null)
+        fi
+        scripts/size-gate.sh "$BASE" HEAD
+
 permissions:
   contents: read
