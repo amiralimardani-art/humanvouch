@@ -118,7 +118,7 @@ snarkjs (proof gen) and exported to the Soroban verifier (verifying key).
 > written elsewhere in this doc for readability).
 
 - `attest(proof, publicSignals)` where `publicSignals = [root, nullifierHash, contentHash]`:
-  1. `RegistryContract.is_valid_root(publicSignals[0])` — else reject. **(mandatory membership check)**
+  1. `is_valid_root(publicSignals[0])` (same contract, see root registry above) — else reject. **(mandatory membership check)**
   2. Verify Groth16 proof against the circuit's verifying key — else reject.
   3. `nullifierHash` (`publicSignals[1]`) not already used for this `contentHash` (`publicSignals[2]`) — else reject (anti-replay).
   4. Record: `contentHash → unique_human_count++`, store `(contentHash, nullifierHash)` used-set, timestamp.
@@ -223,7 +223,7 @@ State this disclaimer in the demo video and README.
 
 **MUST**
 - Circom circuit (Merkle inclusion + content nullifier) + Groth16 trusted setup + artifacts.
-- `RegistryContract` + `AttestContract` (verify + valid-root + replay guard + record + view) on testnet.
+- `AttestContract` with built-in root registry (verify + valid-root + replay guard + record + view) on testnet. ✅ (no separate `RegistryContract`)
 - Enrollment script (mock issuer) + proof-gen path (API/snarkjs).
 - Express API: submit attestation, query vouches, Medium adapter, canonical normalization.
 - Nuxt verifier page (canonical content + vouch count + live check) + author submit UI.
