@@ -1,6 +1,6 @@
 # On-chain status — what is PROVEN vs what remains
 
-Last updated: 2026-06-29
+Last updated: 2026-10-08
 
 ## Proven on Stellar testnet (real, no mocks)
 
@@ -40,9 +40,14 @@ Build artifacts (`build/`, `target/`, `*.zkey`, `*.ptau`) are gitignored and reg
 
 1. ~~**AttestContract + RegistryContract**~~ ✅ DONE — `packages/contracts/attest/`, deployed +
    proven on testnet (see above).
-2. **Frontend wiring**: author flow (paste content → SHA256→field → browser generates proof via
-   snarkjs wasm + the attestation zkey → submit `attest` tx) and verifier flow (`get_vouches`).
-   Wallet connect via Stellar Wallets Kit. Replace the static landing CTAs.
+2. ~~**Frontend wiring**~~ ✅ DONE — author flow (paste content → SHA-256 → field → browser proof via
+   snarkjs wasm + the attestation zkey → submit `attest` tx) and verifier flow (`get_vouches`):
+   - content hash and proof: `packages/web/lib/zk.js` (`contentHashField`, `generateVouchProof`)
+   - `attest` submission and vouch count: `packages/web/lib/stellar.js` (`submitAttest`, `getVouches`)
+   - interactive UI replacing the static CTAs: `packages/web/app.vue`
+   - **Wallet:** the demo does **not** use Stellar Wallets Kit. `connectWallet` in
+     `packages/web/lib/stellar.js` generates a built-in testnet keypair in the browser, funds it via
+     Friendbot and keeps it in `localStorage`. Wallets Kit (user-owned wallets) remains the production path.
 3. ~~**Deploy**~~ ✅ DONE — Nuxt + nitro server routes on Vercel via `packages/web/scripts/deploy.sh`;
    contracts on testnet. See [README → Deploy](../README.md#deploy).
 4. **Content index**: a persistent content index (planned on Turso) is not built yet.
