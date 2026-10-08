@@ -1,38 +1,61 @@
 name: CI
-
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
+  push: null
+  pull_request: null
 jobs:
   contracts:
     name: contracts (build + test)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    - name: Install Rust toolchain (1.91.0)
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: 1.91.0
+        targets: wasm32v1-none
+    - uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: 'packages/contracts/attest
 
-      - name: Install Rust toolchain (1.91.0)
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: 1.91.0
-          targets: wasm32v1-none
+          packages/contracts/groth16-verifier
 
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: |
-            packages/contracts/attest
-            packages/contracts/groth16-verifier
-
-      - name: Build attest contract (wasm32v1-none, release)
-        run: cargo build --manifest-path packages/contracts/attest/Cargo.toml --target wasm32v1-none --release
-
-      - name: Build groth16-verifier contract (wasm32v1-none, release)
-        run: cargo build --manifest-path packages/contracts/groth16-verifier/Cargo.toml --target wasm32v1-none --release
-
-      - name: Test attest contract
-        run: cargo test --manifest-path packages/contracts/attest/Cargo.toml --release
-
-      - name: Test groth16-verifier contract
-        run: cargo test --manifest-path packages/contracts/groth16-verifier/Cargo.toml --release
+          '
+    - name: Build attest contract (wasm32v1-none, release)
+      run: cargo build --manifest-path packages/contracts/attest/Cargo.toml --target
+        wasm32v1-none --release
+    - name: Build groth16-verifier contract (wasm32v1-none, release)
+      run: cargo build --manifest-path packages/contracts/groth16-verifier/Cargo.toml
+        --target wasm32v1-none --release
+    - name: Test attest contract
+      run: cargo test --manifest-path packages/contracts/attest/Cargo.toml --release
+    - name: Test groth16-verifier contract
+      run: cargo test --manifest-path packages/contracts/groth16-verifier/Cargo.toml
+        --release
+  circuits:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v7
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '24'
+    - name: Enable Corepack
+      run: corepack enable
+    - name: Restore Yarn cache
+      uses: actions/setup-node@v7
+      with:
+        node-version: '24'
+        cache: yarn
+    - run: yarn install --immutable
+    - name: Install Circom 2.2.3
+      run: "mkdir -p \"$RUNNER_TEMP/circom-bin\"\ncurl --fail --location --silent\
+        \ --show-error \\\n  https://github.com/iden3/circom/releases/download/v2.2.3/circom-linux-amd64\
+        \ \\\n  --output \"$RUNNER_TEMP/circom-bin/circom\"\nprintf '%s  %s\\n' \\\
+        \n  '85342c7ff332d948df7c0c50ecf201e6129349aef550ce873f3c811b79fe53a3' \\\n\
+        \  \"$RUNNER_TEMP/circom-bin/circom\" | sha256sum --check --status\nchmod\
+        \ +x \"$RUNNER_TEMP/circom-bin/circom\"\necho \"$RUNNER_TEMP/circom-bin\"\
+        \ >> \"$GITHUB_PATH\"\n"
+    - name: Test circuits
+      run: yarn workspace @humanvouch/circuits test
+permissions:
+  contents: read
