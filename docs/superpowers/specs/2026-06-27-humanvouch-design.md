@@ -168,6 +168,13 @@ post URL → [1 fetch published content] → [2 canonical normalize] → [3 hash
   is blocked, ship Medium and mark X "in progress" — does not sink the deliverable.
 
 ### 5.2 Canonical normalization (the real engineering risk — not the blockchain)
+
+> **Status: NOT IMPLEMENTED.** No normalization module exists. Both hashing entry points operate on the
+> **raw input text**: `contentHashField` in `packages/web/lib/zk.js` (browser) and `contentToField` in
+> `packages/web/server/utils/chain.ts` (x402 endpoint) take SHA-256 of the exact bytes and reduce them into
+> the BLS12-381 field. Any whitespace, Unicode or formatting difference changes the hash. Those two
+> functions are where the module described below would be applied.
+
 Author-side hash and verifier-side hash MUST agree despite platform reformatting. Shared deterministic
 normalization module:
 - HTML/markdown → plain text · collapse/normalize whitespace · Unicode NFC · strip platform chrome.
@@ -238,7 +245,7 @@ State this disclaimer in the demo video and README.
 - **Circuit:** member → proof verifies; non-member → fails; wrong nullifier → fails.
 - **Contracts:** accept valid; reject replay (same nullifier+content); reject invalid/stale root; count increments.
 - **Normalization:** author text and platform-fetched text of the same logical content hash equal;
-  edited content hashes differ.
+  edited content hashes differ. ❌ **Not written** (the normalization module does not exist, see §5.2).
 - **E2E:** enroll → attest → `get_vouches`=1; same human+content → reject; different human+same content → 2;
   reader pastes Medium URL → verifier shows correct count.
 
