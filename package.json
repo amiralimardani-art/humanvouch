@@ -6,6 +6,9 @@
     "packages/*"
   ],
   "packageManager": "yarn@4.14.1",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
