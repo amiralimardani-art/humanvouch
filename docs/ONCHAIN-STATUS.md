@@ -45,6 +45,7 @@ Build artifacts (`build/`, `target/`, `*.zkey`, `*.ptau`) are gitignored and reg
    Wallet connect via Stellar Wallets Kit. Replace the static landing CTAs.
 3. ~~**Deploy**~~ ✅ DONE — Nuxt + nitro server routes on Vercel via `packages/web/scripts/deploy.sh`;
    contracts on testnet. See [README → Deploy](../README.md#deploy).
+4. **Content index**: a persistent content index (planned on Turso) is not built yet.
 
 ## Reproduce the proven core
 
