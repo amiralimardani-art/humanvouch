@@ -76,5 +76,25 @@ jobs:
       run: yarn workspace @humanvouch/web run postinstall
     - name: Typecheck Nuxt app
       run: yarn workspace @humanvouch/web run typecheck
+  summary:
+    name: summary
+    needs: [contracts, circuits, typecheck]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Require every job to succeed
+      env:
+        RESULTS: ${{ toJSON(needs) }}
+      run: |
+        echo "| job | result |" >> "$GITHUB_STEP_SUMMARY"
+        echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+        echo "$RESULTS" | jq -r 'to_entries[] | "| \(.key) | \(.value.result) |"' >> "$GITHUB_STEP_SUMMARY"
+        failed=$(echo "$RESULTS" | jq -r '[to_entries[] | select(.value.result != "success") | .key] | join(", ")')
+        if [ -n "$failed" ]; then
+          echo "::error::Not successful: $failed"
+          exit 1
+        fi
+
 permissions:
   contents: read
