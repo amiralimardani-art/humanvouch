@@ -38,8 +38,10 @@ Build artifacts (`build/`, `target/`, `*.zkey`, `*.ptau`) are gitignored and reg
 
 ## What remains (pure engineering, no crypto risk)
 
-1. ~~**AttestContract + RegistryContract**~~ ✅ DONE — `packages/contracts/attest/`, deployed +
-   proven on testnet (see above).
+1. ~~**AttestContract + root registry**~~ ✅ DONE — `packages/contracts/attest/`, deployed +
+   proven on testnet (see above). No separate `RegistryContract` was built: the root registry lives
+   inside `AttestContract` (`packages/contracts/attest/src/lib.rs`) as the `ROOTS` vector in instance
+   storage, written by `set_root` and read by `is_valid_root`, which `attest` calls before verifying.
 2. **Frontend wiring**: author flow (paste content → SHA256→field → browser generates proof via
    snarkjs wasm + the attestation zkey → submit `attest` tx) and verifier flow (`get_vouches`).
    Wallet connect via Stellar Wallets Kit. Replace the static landing CTAs.

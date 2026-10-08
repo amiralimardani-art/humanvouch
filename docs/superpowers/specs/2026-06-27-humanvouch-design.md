@@ -92,9 +92,15 @@ Artifacts produced by trusted setup (Groth16): `.wasm`, `.zkey`, `verification_k
 snarkjs (proof gen) and exported to the Soroban verifier (verifying key).
 
 ### 4.3 Soroban contracts (Rust)
-**`RegistryContract`**
-- Stores current Merkle `root` and a small history of valid roots (so proofs against a recent root stay valid).
-- `update_root(new_root)` — admin (issuer) only.
+**Root registry (shipped inside `AttestContract`)**
+
+> **As built:** no standalone `RegistryContract` exists. The registry is part of `AttestContract`
+> (`packages/contracts/attest/src/lib.rs`): valid roots are kept in the `ROOTS` vector in instance
+> storage; `set_root(root)` appends a root if it is new and `is_valid_root(root) -> bool` checks
+> membership. In the demo `set_root` is not restricted to an admin and the root history is not bounded.
+
+- Stores the valid Merkle roots (so proofs against an earlier root stay valid).
+- `set_root(root)` — publishes a root (planned as `update_root`, admin/issuer only).
 - `is_valid_root(root) -> bool`.
 
 **`AttestContract`** (embeds the Groth16 verifier from `soroban-examples/groth16_verifier`)
