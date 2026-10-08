@@ -20,6 +20,7 @@
     "@vue/compiler-sfc": "3.5.39",
     "esbuild": "0.28.1",
     "vitest": "^4.0.18",
-    "vue": "3.5.39"
+    "vue": "3.5.39",
+    "@vue/server-renderer": "3.5.39"
   }
 }
