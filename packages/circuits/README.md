@@ -13,6 +13,11 @@ Requires the Circom compiler on PATH (`circom --version` → 2.1.x).
 `yarn workspace @humanvouch/circuits build`
 Artifacts: `build/attestation_js/attestation.wasm`, `build/attestation_final.zkey`, `build/verification_key.json`.
 
+> **Curve: BN254.** This package's pipeline (`scripts/build.sh`) still builds on BN254: the committed
+> `build/verification_key.json` reads `"curve": "bn128"`. It is the Plan 01 key and is **superseded
+> on-chain**: the Soroban verifier (`packages/contracts/groth16-verifier/src/lib.rs`) only accepts
+> BLS12-381 keys (see `docs/superpowers/specs/2026-06-29-bls12381-onchain-addendum.md`).
+
 ## API
 - `generateAttestationProof({ identitySecret, contentHash, leaves, leafIndex, depth=20 })` → `{ proof, publicSignals }`
 - `verifyAttestationProof(proof, publicSignals)` → `boolean`
@@ -20,7 +25,11 @@ Artifacts: `build/attestation_js/attestation.wasm`, `build/attestation_final.zke
 - `commitment(secret)`, `nullifierHash(secret, contentHash)`, `hashToField(bytes)`
 
 ## Consumed by
-- Plan 02 (Soroban): `verification_key.json` → on-chain Groth16 verifier.
+- Local tests and off-chain verification only: `verification_key.json` (BN254) is used by
+  `verifyAttestationProof`. It is **not** used on-chain.
+- The shipped on-chain key is BLS12-381, produced by the `packages/zk/circuits/` pipeline
+  (`circom attestation255.circom --prime bls12381`, then the BLS12-381 trusted setup described in
+  `docs/ONCHAIN-STATUS.md`) and loaded into the contract with `set_vk`.
 - Plan 03 (API): `generateAttestationProof` → attestation payload; `hashToField` → canonical content hash.
 
 ## Security & integration invariants (READ before Plan 02/03)
