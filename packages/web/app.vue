@@ -101,19 +101,23 @@ onMounted(async () => {
   if (route.query.v) await openSharedVerification(String(route.query.v));
 });
 
-import { resolveShareView } from "~/lib/shareView.js";
+import { resolveShareView, createShareFailure } from "~/lib/shareView.js";
 
 // A shareable link /?v=<contentHashField> resolves the attestation for anyone.
 async function openSharedVerification(hashField: string) {
   shareView.value = { loading: true, hashField, failed: false, error: null };
-  const zk = await import("~/lib/zk.js");
-  const st = await import("~/lib/stellar.js");
-  shareView.value = await resolveShareView(
-    hashField,
-    (hf: string) => st.getVouches(cfg, null, zk.toBytes32BE(BigInt(hf))),
-    (hf: string) =>
-      typeof localStorage !== "undefined" ? localStorage.getItem("hv_content_" + hf) : null
-  );
+  try {
+    const zk = await import("~/lib/zk.js");
+    const st = await import("~/lib/stellar.js");
+    shareView.value = await resolveShareView(
+      hashField,
+      (hf: string) => st.getVouches(cfg, null, zk.toBytes32BE(BigInt(hf))),
+      (hf: string) =>
+        typeof localStorage !== "undefined" ? localStorage.getItem("hv_content_" + hf) : null
+    );
+  } catch (e: any) {
+    shareView.value = createShareFailure(hashField, e);
+  }
 }
 
 function short(a: string) {

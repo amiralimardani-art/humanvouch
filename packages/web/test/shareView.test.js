@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert";
-import { resolveShareView } from "../lib/shareView.js";
+import { resolveShareView, createShareFailure } from "../lib/shareView.js";
 
 test("resolveShareView captures standard Error and sets failed=true", async () => {
   const result = await resolveShareView("1234567890", async () => {
@@ -57,3 +57,15 @@ test("resolveShareView handles positive vouches and content with failed=false", 
   assert.strictEqual(result.count, 3);
   assert.strictEqual(result.content, "Verified report content");
 });
+
+test("createShareFailure captures dynamic import rejection and resets loading", () => {
+  const importError = new TypeError("Failed to fetch dynamically imported module: ~/lib/zk.js");
+  const result = createShareFailure("1234567890", importError);
+
+  assert.strictEqual(result.loading, false);
+  assert.strictEqual(result.failed, true);
+  assert.strictEqual(result.error, "Failed to fetch dynamically imported module: ~/lib/zk.js");
+  assert.strictEqual(result.count, null);
+  assert.strictEqual(result.content, null);
+});
+
