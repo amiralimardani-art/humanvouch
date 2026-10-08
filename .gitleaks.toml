@@ -13,6 +13,10 @@ keywords = ["S"]
 
 [allowlist]
 description = "Public Cloudflare Turnstile test keys (always pass / dummy), documented in SECURITY.md"
+# Commit 842eba4 committed a testnet-only demo signer seed (demoSignerSecret in
+# packages/web/nuxt.config.ts). It was later removed from the tree but stays in history.
+# Treat that key as public: it must never hold value or be reused.
+commits = ["842eba444b11b22378172365d943e6d90cc648b5"]
 regexes = [
   '''1x0000000000000000000000000000000AA''', # Turnstile test secret: always passes
   '''1x00000000000000000000AA''',            # Turnstile test sitekey: always passes
