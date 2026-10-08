@@ -158,6 +158,13 @@ Badge snippet (plain text, pasteable in any tweet / article footer / video descr
 ```
 
 ### 5.1 Platform adapters (verify the *actually published* content)
+
+> **Status: NOT IMPLEMENTED.** No platform adapter exists: there is no adapter file under `packages/web/`,
+> and neither `@mozilla/readability` nor `jsdom` is a dependency in `packages/web/package.json`. The shipped
+> verifier accepts **pasted text only** (it hashes what the reader pastes). Verifying a Medium or X post
+> URL, as described below, is planned work. Because the Medium adapter was a MUST (§8), the submission
+> does not meet that item; the X adapter was a SHOULD.
+
 Adapter pipeline — only step 1 differs per platform; steps 2–4 are shared:
 ```
 post URL → [1 fetch published content] → [2 canonical normalize] → [3 hash] → [4 query AttestContract]
@@ -226,14 +233,14 @@ State this disclaimer in the demo video and README.
 - Circom circuit (Merkle inclusion + content nullifier) + Groth16 trusted setup + artifacts.
 - `RegistryContract` + `AttestContract` (verify + valid-root + replay guard + record + view) on testnet.
 - Enrollment script (mock issuer) + proof-gen path (API/snarkjs).
-- Express API: submit attestation, query vouches, Medium adapter, canonical normalization.
+- API: submit attestation, query vouches ✅ (Nitro routes / browser). Medium adapter ❌ not built (§5.1). Canonical normalization ❌ not built (§5.2).
 - Nuxt verifier page (canonical content + vouch count + live check) + author submit UI.
 - Portable badge/link.
 - README with explicit honest threat model + "production uses World ID".
 - 2–3 min demo video.
 
 **SHOULD**
-- X adapter (if fetch path cooperates).
+- X adapter (if fetch path cooperates). ❌ not built (§5.1).
 - Content-bound attestation NFT (stretch; cheap on-chain, build only after MUST is done).
 
 **CUT**
