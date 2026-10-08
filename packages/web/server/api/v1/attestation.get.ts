@@ -7,12 +7,20 @@
 //   GET /api/v1/attestation?content=<text>        (or ?hash=<fieldElement>)
 //   -> 402 with payment requirements  (no X-Payment header)
 //   -> 200 with the on-chain attestation (with X-Payment header)
+//   `content` and `hash` are single-valued: a repeated parameter (?content=a&content=b) is a 400.
 //
 // This turns HumanVouch from a button into infrastructure: a verifiable,
 // machine-payable signal of human authorship for the agent era.
 export default defineEventHandler(async (event) => {
   const cfg = useRuntimeConfig().public as unknown as ChainCfg;
   const q = getQuery(event);
+
+  for (const name of ["content", "hash"] as const) {
+    if (Array.isArray(q[name])) {
+      setResponseStatus(event, 400);
+      return { code: "MULTIPLE_VALUES", error: `${name} must be given once, not as a list` };
+    }
+  }
 
   let contentField: bigint;
   if (q.hash !== undefined) {
