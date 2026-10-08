@@ -256,3 +256,13 @@ impl AttestContract {
             .unwrap_or(0)
     }
 }
+
+#[cfg(test)]
+mod test {
+    extern crate std;
+
+    #[test]
+    fn test_harness_links() {
+        // The crate now builds as an rlib, so #[cfg(test)] modules link and run.
+    }
+}
