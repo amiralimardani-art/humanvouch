@@ -43,8 +43,9 @@ Build artifacts (`build/`, `target/`, `*.zkey`, `*.ptau`) are gitignored and reg
 2. **Frontend wiring**: author flow (paste content → SHA256→field → browser generates proof via
    snarkjs wasm + the attestation zkey → submit `attest` tx) and verifier flow (`get_vouches`).
    Wallet connect via Stellar Wallets Kit. Replace the static landing CTAs.
-3. **Deploy**: Nuxt + nitro server routes → Vercel or Cloudflare Pages; content index → Turso;
-   contracts on testnet.
+3. ~~**Deploy**~~ ✅ DONE — Nuxt + nitro server routes on Vercel via `packages/web/scripts/deploy.sh`;
+   contracts on testnet. See [README → Deploy](../README.md#deploy).
+4. **Content index**: a persistent content index (planned on Turso) is not built yet.
 
 ## Reproduce the proven core
 
