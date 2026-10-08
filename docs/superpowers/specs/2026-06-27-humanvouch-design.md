@@ -133,11 +133,15 @@ snarkjs (proof gen) and exported to the Soroban verifier (verifying key).
    demo if browser proving is flaky; it still runs on the author's machine, not the server.)
 3. The browser sends only `{proof, [merkleRoot, contentHash, nullifierHash]}` to the API; the API relays
    the `attest` tx to Soroban via `@stellar/stellar-sdk`. The API never sees `identitySecret`.
-4. Returns a verification link `…/v/{id}` + copy-paste badge snippet. Canonical content (not the secret)
+4. Returns a verification link `/?v=<contentHashField>` + copy-paste badge snippet. The `v` parameter
+   is the content field element itself (decimal): `SHA-256(canonical content)` reduced modulo the
+   BLS12-381 scalar field order, as computed by `contentHashField` in `packages/web/lib/zk.js` (and
+   `contentToField` in `packages/web/server/utils/chain.ts`). It is **not** an opaque server-side id:
+   anyone holding the content can recompute it, and no server state is needed to resolve it. Canonical content (not the secret)
    stored in SQLite (demo) / IPFS (prod) so the verifier can display/compare it.
 
 **Reader flow**
-1. Reader opens `…/v/{id}` OR pastes a **platform post URL** into the verifier.
+1. Reader opens `/?v=<contentHashField>` OR pastes a **platform post URL** into the verifier.
 2. Verifier renders canonical content + "✅ Vouched by N unique verified humans · anonymous · on Stellar"
    + live on-chain check button.
 
@@ -150,7 +154,7 @@ re-encoding).
 
 Badge snippet (plain text, pasteable in any tweet / article footer / video description):
 ```
-🧑 Human-Vouched ✓ · humanvouch.xyz/v/a1b2c3
+🧑 Human-Vouched ✓ · humanvouch.xyz/?v=<contentHashField>
 ```
 
 ### 5.1 Platform adapters (verify the *actually published* content)

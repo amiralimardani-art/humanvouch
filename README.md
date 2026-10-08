@@ -24,7 +24,7 @@ accounts cannot fake. It's **attribution, not authorship**; **accountability, no
   zero-knowledge proof is generated **in the browser** (the identity secret never leaves the device)
   and the attestation is recorded **on Stellar**.
 - **Verify** — anyone can check how many unique verified humans stand behind a piece of content.
-- **Shareable credential** — vouching returns a `/?v=<hash>` link + a paste-able badge you drop on X,
+- **Shareable credential** — vouching returns a `/?v=<contentHashField>` link (the SHA-256 content hash reduced into the BLS12-381 field, recomputable by anyone holding the content) + a paste-able badge you drop on X,
   Medium, anywhere; opening it resolves the attestation on-chain.
 - **For agents (x402)** — an HTTP endpoint where an **AI agent pays a micropayment over
   [x402](https://github.com/coinbase/x402) (HTTP 402)** and gets a verifiable, on-chain answer to
